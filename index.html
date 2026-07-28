@@ -238,7 +238,96 @@ footer .fmarca{font-family:'Parisienne',cursive;font-size:1.8rem;color:var(--ama
 .pedido .resumo{font-size:.91rem;color:var(--ink-soft);line-height:1.35}
 .pedido .resumo b{color:var(--rosa);font-family:'Cormorant Garamond',serif;font-size:1.05rem}
 
-/* ─── lightbox ─── */
+/* ─── checkout modal ─── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(46,26,34,.75);z-index:200;
+  display:none;align-items:center;justify-content:center;padding:16px;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.ativo{display:flex}
+.modal{
+  background:#fff;border-radius:24px;width:min(520px,100%);
+  max-height:90vh;overflow-y:auto;
+  box-shadow:0 40px 80px -20px rgba(46,26,34,.55);
+  animation:slideUp .3s cubic-bezier(.2,.9,.3,1);
+}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{
+  background:linear-gradient(135deg,var(--rosa),#B04F67);
+  padding:22px 26px 18px;border-radius:24px 24px 0 0;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-header h3{color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400}
+.modal-header p{color:rgba(255,255,255,.75);font-size:.85rem;margin-top:2px}
+.modal-close{
+  background:rgba(255,255,255,.2);border:0;border-radius:50%;
+  width:36px;height:36px;color:#fff;font-size:1.1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.modal-close:hover{background:rgba(255,255,255,.35)}
+.modal-body{padding:24px 26px 28px;display:flex;flex-direction:column;gap:18px}
+
+/* resumo do pedido */
+.ck-resumo{
+  background:var(--amarelo-pale);border:1.5px solid rgba(245,200,66,.4);
+  border-radius:14px;padding:14px 16px;font-size:.9rem;color:var(--ink-soft);
+}
+.ck-resumo strong{display:block;color:var(--rosa);font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:6px}
+.ck-resumo ul{list-style:none;display:flex;flex-direction:column;gap:3px}
+.ck-resumo li::before{content:'🎂 '}
+
+/* campos */
+.ck-field{display:flex;flex-direction:column;gap:6px}
+.ck-field label{font-size:.85rem;font-weight:600;color:var(--ink);letter-spacing:.02em}
+.ck-field input,.ck-field textarea,.ck-field select{
+  border:1.5px solid rgba(200,96,122,.22);border-radius:10px;
+  padding:11px 14px;font-family:'Jost',sans-serif;font-size:.97rem;
+  color:var(--ink);background:#fff;outline:none;transition:border .18s;
+  width:100%;
+}
+.ck-field input:focus,.ck-field textarea:focus,.ck-field select:focus{border-color:var(--rosa)}
+.ck-field textarea{resize:vertical;min-height:72px}
+
+/* radio group */
+.ck-radio-group{display:flex;gap:10px}
+.ck-radio{flex:1}
+.ck-radio input{display:none}
+.ck-radio label{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  padding:12px 10px;border:2px solid rgba(200,96,122,.2);border-radius:12px;
+  cursor:pointer;text-align:center;font-size:.88rem;color:var(--ink-soft);
+  transition:all .18s;background:#fff;
+}
+.ck-radio label .ico{font-size:1.4rem}
+.ck-radio input:checked + label{
+  border-color:var(--rosa);background:var(--rosa-pale);color:var(--rosa);font-weight:600;
+}
+
+/* pagamento */
+.pag-options{display:flex;gap:10px;flex-wrap:wrap}
+.pag-opt{flex:1;min-width:90px}
+.pag-opt input{display:none}
+.pag-opt label{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:10px 8px;border:2px solid rgba(200,96,122,.2);border-radius:10px;
+  cursor:pointer;font-size:.87rem;color:var(--ink-soft);transition:all .18s;background:#fff;
+}
+.pag-opt input:checked + label{border-color:var(--amarelo);background:var(--amarelo-pale);color:var(--ink);font-weight:600}
+
+/* campo oculto */
+.ck-hidden{display:none}
+.ck-hidden.visivel{display:flex}
+
+/* botão enviar */
+.ck-submit{
+  background:linear-gradient(135deg,var(--rosa),#B04F67);color:#fff;
+  border:0;border-radius:999px;padding:16px;width:100%;font-size:1rem;font-weight:600;
+  font-family:'Jost',sans-serif;cursor:pointer;letter-spacing:.02em;
+  box-shadow:var(--shadow-rosa);transition:transform .18s,box-shadow .18s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.ck-submit:hover{transform:translateY(-2px);box-shadow:0 24px 50px -18px rgba(200,96,122,.55)}
+.ck-submit:disabled{opacity:.55;cursor:not-allowed;transform:none}
 .lightbox{
   position:fixed;inset:0;background:rgba(46,26,34,.93);z-index:100;
   display:none;align-items:center;justify-content:center;padding:22px;
@@ -498,6 +587,94 @@ footer .fmarca{font-family:'Parisienne',cursive;font-size:1.8rem;color:var(--ama
   <a href="#" class="btn btn-rosa btn-sm btn-primary" id="btnEnviar">Enviar pedido no WhatsApp</a>
 </div>
 
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+    <div class="modal-header">
+      <div>
+        <h3 id="modalTitulo">Finalizar encomenda</h3>
+        <p>Doce Encanto Confeitaria Artesanal</p>
+      </div>
+      <button class="modal-close" id="modalClose" aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- resumo -->
+      <div class="ck-resumo">
+        <strong>🛒 Seu pedido</strong>
+        <ul id="ckLista"></ul>
+      </div>
+
+      <!-- nome -->
+      <div class="ck-field">
+        <label for="ckNome">Seu nome *</label>
+        <input type="text" id="ckNome" placeholder="Como você se chama?" autocomplete="name">
+      </div>
+
+      <!-- retirada ou entrega -->
+      <div class="ck-field">
+        <label>Como prefere receber? *</label>
+        <div class="ck-radio-group">
+          <div class="ck-radio">
+            <input type="radio" name="modalidade" id="mRetirada" value="Retirada no local">
+            <label for="mRetirada"><span class="ico">🏠</span>Retirar no local</label>
+          </div>
+          <div class="ck-radio">
+            <input type="radio" name="modalidade" id="mEntrega" value="Entrega">
+            <label for="mEntrega"><span class="ico">🛵</span>Entrega</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- campos de entrega (aparecem só se entrega) -->
+      <div class="ck-field ck-hidden" id="grupoEntrega">
+        <label for="ckEndereco">Endereço completo *</label>
+        <input type="text" id="ckEndereco" placeholder="Rua, número, bairro">
+      </div>
+      <div class="ck-field ck-hidden" id="grupoReferencia">
+        <label for="ckReferencia">Ponto de referência</label>
+        <input type="text" id="ckReferencia" placeholder="Ex: próximo ao mercado X">
+      </div>
+
+      <!-- pagamento -->
+      <div class="ck-field">
+        <label>Forma de pagamento *</label>
+        <div class="pag-options">
+          <div class="pag-opt">
+            <input type="radio" name="pagamento" id="pagPix" value="Pix">
+            <label for="pagPix">💚 Pix</label>
+          </div>
+          <div class="pag-opt">
+            <input type="radio" name="pagamento" id="pagCartao" value="Cartão">
+            <label for="pagCartao">💳 Cartão</label>
+          </div>
+          <div class="pag-opt">
+            <input type="radio" name="pagamento" id="pagDinheiro" value="Dinheiro">
+            <label for="pagDinheiro">💵 Dinheiro</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- troco (aparece só se dinheiro) -->
+      <div class="ck-field ck-hidden" id="grupoTroco">
+        <label for="ckTroco">Precisa de troco?</label>
+        <input type="text" id="ckTroco" placeholder="Ex: Troco para R$ 100,00 (ou deixe em branco)">
+      </div>
+
+      <!-- observações -->
+      <div class="ck-field">
+        <label for="ckObs">Alguma observação?</label>
+        <textarea id="ckObs" placeholder="Ex: sem canela, tamanho especial, data de entrega..."></textarea>
+      </div>
+
+      <button class="ck-submit" id="ckEnviar">
+        <span>Enviar pedido pelo WhatsApp</span> 💬
+      </button>
+
+    </div>
+  </div>
+</div>
+
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
   <button type="button" id="fecharLb" aria-label="Fechar">✕</button>
@@ -508,6 +685,7 @@ footer .fmarca{font-family:'Parisienne',cursive;font-size:1.8rem;color:var(--ama
 /* ===== ALTERE O NÚMERO DE WHATSAPP (55 + DDD + número, sem espaços) ===== */
 const WHATSAPP = "5511999999999";
 
+/* ── Carrinho ── */
 const carrinho = new Map();
 const barra    = document.getElementById('pedido');
 const resumoQ  = document.getElementById('resumoQtd');
@@ -532,31 +710,106 @@ document.querySelectorAll('.card').forEach(card => {
   });
 });
 
-function montaMensagem() {
-  let msg = "Olá! Vim pela página da Doce Encanto e quero encomendar:\n\n";
-  carrinho.forEach((q, n) => { msg += "• " + q + "x " + n + "\n"; });
-  return msg + "\nPode me passar o valor e a data de entrega?";
-}
-
-function abreWpp() {
-  if (!carrinho.size) return;
-  window.open("https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(montaMensagem()), "_blank");
-}
-
 function atualizar() {
   let total = 0; const itens = [];
-  carrinho.forEach((q, n) => { total += q; itens.push(q + "x " + n); });
+  carrinho.forEach((q, n) => { total += q; itens.push(q + 'x ' + n); });
   barra.classList.toggle('ativo', total > 0);
-  resumoQ.textContent = total + (total === 1 ? " item selecionado" : " itens selecionados");
+  resumoQ.textContent = total + (total === 1 ? ' item selecionado' : ' itens selecionados');
   resumoL.textContent = itens.join(' · ');
 }
 
-document.getElementById('btnEnviar').addEventListener('click', e => { e.preventDefault(); abreWpp(); });
+/* ── Abre modal ao clicar em "Enviar pedido" ── */
+const modalOverlay = document.getElementById('modalOverlay');
+const ckLista      = document.getElementById('ckLista');
+
+function abreModal() {
+  if (!carrinho.size) return;
+  // preenche resumo
+  ckLista.innerHTML = '';
+  carrinho.forEach((q, n) => {
+    const li = document.createElement('li');
+    li.textContent = q + 'x ' + n;
+    ckLista.appendChild(li);
+  });
+  modalOverlay.classList.add('ativo');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('ckNome').focus();
+}
+
+function fechaModal() {
+  modalOverlay.classList.remove('ativo');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('btnEnviar').addEventListener('click', e => { e.preventDefault(); abreModal(); });
+document.getElementById('modalClose').addEventListener('click', fechaModal);
+modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) fechaModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') fechaModal(); });
+
+/* ── Botão faixa amarela ── */
 document.getElementById('btnFaixa').addEventListener('click', e => {
   e.preventDefault();
-  window.open("https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent("Olá! Vim pela página da Doce Encanto e gostaria de informações sobre bolos personalizados."), "_blank");
+  window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent('Olá! Vim pela página da Doce Encanto e gostaria de informações sobre bolos personalizados.'), '_blank');
 });
 
+/* ── Mostrar/ocultar campos de entrega ── */
+document.querySelectorAll('input[name="modalidade"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const entrega = document.getElementById('mEntrega').checked;
+    document.getElementById('grupoEntrega').classList.toggle('visivel', entrega);
+    document.getElementById('grupoReferencia').classList.toggle('visivel', entrega);
+  });
+});
+
+/* ── Mostrar/ocultar campo de troco ── */
+document.querySelectorAll('input[name="pagamento"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const dinheiro = document.getElementById('pagDinheiro').checked;
+    document.getElementById('grupoTroco').classList.toggle('visivel', dinheiro);
+  });
+});
+
+/* ── Enviar para WhatsApp ── */
+document.getElementById('ckEnviar').addEventListener('click', () => {
+  const nome       = document.getElementById('ckNome').value.trim();
+  const modalidade = document.querySelector('input[name="modalidade"]:checked');
+  const pagamento  = document.querySelector('input[name="pagamento"]:checked');
+
+  if (!nome)        { alert('Por favor, informe seu nome.'); document.getElementById('ckNome').focus(); return; }
+  if (!modalidade)  { alert('Escolha retirada ou entrega.'); return; }
+  if (!pagamento)   { alert('Escolha a forma de pagamento.'); return; }
+
+  const isEntrega  = modalidade.value === 'Entrega';
+  const endereco   = document.getElementById('ckEndereco').value.trim();
+  const referencia = document.getElementById('ckReferencia').value.trim();
+  const troco      = document.getElementById('ckTroco').value.trim();
+  const obs        = document.getElementById('ckObs').value.trim();
+
+  if (isEntrega && !endereco) { alert('Por favor, informe o endereço de entrega.'); document.getElementById('ckEndereco').focus(); return; }
+
+  let msg = '🎂 *Olá, Doce Encanto!*\n';
+  msg += 'Vim pela página e quero fazer uma encomenda.\n\n';
+
+  msg += '*📋 Pedido:*\n';
+  carrinho.forEach((q, n) => { msg += '• ' + q + 'x ' + n + '\n'; });
+
+  msg += '\n*👤 Nome:* ' + nome;
+  msg += '\n*🏷️ Modalidade:* ' + modalidade.value;
+
+  if (isEntrega) {
+    msg += '\n*📍 Endereço:* ' + endereco;
+    if (referencia) msg += '\n*🗺️ Referência:* ' + referencia;
+  }
+
+  msg += '\n*💳 Pagamento:* ' + pagamento.value;
+  if (pagamento.value === 'Dinheiro' && troco) msg += '\n*💵 Troco para:* ' + troco;
+  if (obs) msg += '\n\n*📝 Observação:* ' + obs;
+
+  window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg), '_blank');
+  fechaModal();
+});
+
+/* ── Lightbox ── */
 const lb = document.getElementById('lightbox');
 document.getElementById('fecharLb').addEventListener('click', () => lb.classList.remove('ativo'));
 lb.addEventListener('click', e => { if (e.target === lb) lb.classList.remove('ativo'); });
