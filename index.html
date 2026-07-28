@@ -635,15 +635,19 @@ footer .fmarca{font-family:'Parisienne',cursive;font-size:1.8rem;color:var(--ama
       <!-- campos de entrega (aparecem só se entrega) -->
       <div class="ck-field ck-hidden" id="grupoEntrega">
         <label for="ckEndereco">Endereço completo *</label>
-        <input type="text" id="ckEndereco" placeholder="Rua, número, bairro">
+        <input type="text" id="ckEndereco" placeholder="Rua e número">
+      </div>
+      <div class="ck-field ck-hidden" id="grupoBairro">
+        <label for="ckBairro">Bairro *</label>
+        <input type="text" id="ckBairro" placeholder="Qual o bairro?">
       </div>
       <div class="ck-field ck-hidden" id="grupoReferencia">
         <label for="ckReferencia">Ponto de referência</label>
         <input type="text" id="ckReferencia" placeholder="Ex: próximo ao mercado X">
       </div>
 
-      <!-- pagamento -->
-      <div class="ck-field">
+      <!-- pagamento (aparece só se entrega) -->
+      <div class="ck-field ck-hidden" id="grupoPagamento">
         <label>Forma de pagamento *</label>
         <div class="pag-options">
           <div class="pag-opt">
@@ -758,12 +762,19 @@ document.getElementById('btnFaixa').addEventListener('click', e => {
   window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent('Olá! Vim pela página da Doce Encanto e gostaria de informações sobre bolos personalizados.'), '_blank');
 });
 
-/* ── Mostrar/ocultar campos de entrega ── */
+/* ── Mostrar/ocultar campos de entrega + pagamento ── */
 document.querySelectorAll('input[name="modalidade"]').forEach(r => {
   r.addEventListener('change', () => {
     const entrega = document.getElementById('mEntrega').checked;
     document.getElementById('grupoEntrega').classList.toggle('visivel', entrega);
+    document.getElementById('grupoBairro').classList.toggle('visivel', entrega);
     document.getElementById('grupoReferencia').classList.toggle('visivel', entrega);
+    document.getElementById('grupoPagamento').classList.toggle('visivel', entrega);
+    // Se voltou para retirada, limpa pagamento e troco
+    if (!entrega) {
+      document.querySelectorAll('input[name="pagamento"]').forEach(p => p.checked = false);
+      document.getElementById('grupoTroco').classList.remove('visivel');
+    }
   });
 });
 
@@ -781,17 +792,19 @@ document.getElementById('ckEnviar').addEventListener('click', () => {
   const modalidade = document.querySelector('input[name="modalidade"]:checked');
   const pagamento  = document.querySelector('input[name="pagamento"]:checked');
 
-  if (!nome)        { alert('Por favor, informe seu nome.'); document.getElementById('ckNome').focus(); return; }
-  if (!modalidade)  { alert('Escolha retirada ou entrega.'); return; }
-  if (!pagamento)   { alert('Escolha a forma de pagamento.'); return; }
+  if (!nome)       { alert('Por favor, informe seu nome.'); document.getElementById('ckNome').focus(); return; }
+  if (!modalidade) { alert('Escolha retirada ou entrega.'); return; }
 
   const isEntrega  = modalidade.value === 'Entrega';
   const endereco   = document.getElementById('ckEndereco').value.trim();
+  const bairro     = document.getElementById('ckBairro').value.trim();
   const referencia = document.getElementById('ckReferencia').value.trim();
   const troco      = document.getElementById('ckTroco').value.trim();
   const obs        = document.getElementById('ckObs').value.trim();
 
-  if (isEntrega && !endereco) { alert('Por favor, informe o endereço de entrega.'); document.getElementById('ckEndereco').focus(); return; }
+  if (isEntrega && !endereco)  { alert('Por favor, informe o endereço.'); document.getElementById('ckEndereco').focus(); return; }
+  if (isEntrega && !bairro)    { alert('Por favor, informe o bairro.'); document.getElementById('ckBairro').focus(); return; }
+  if (isEntrega && !pagamento) { alert('Escolha a forma de pagamento.'); return; }
 
   let msg = '🎂 *Olá, Doce Encanto!*\n';
   msg += 'Vim pela página e quero fazer uma encomenda.\n\n';
@@ -804,11 +817,12 @@ document.getElementById('ckEnviar').addEventListener('click', () => {
 
   if (isEntrega) {
     msg += '\n*📍 Endereço:* ' + endereco;
+    msg += '\n*🏘️ Bairro:* ' + bairro;
     if (referencia) msg += '\n*🗺️ Referência:* ' + referencia;
+    msg += '\n*💳 Pagamento:* ' + pagamento.value;
+    if (pagamento.value === 'Dinheiro' && troco) msg += '\n*💵 Troco para:* ' + troco;
   }
 
-  msg += '\n*💳 Pagamento:* ' + pagamento.value;
-  if (pagamento.value === 'Dinheiro' && troco) msg += '\n*💵 Troco para:* ' + troco;
   if (obs) msg += '\n\n*📝 Observação:* ' + obs;
 
   window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg), '_blank');
