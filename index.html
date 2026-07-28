@@ -71,12 +71,18 @@ h3{font-size:1.3rem;font-weight:400;color:var(--ink)}
 /* ─── hero ─── */
 .hero{position:relative;background:var(--ink);line-height:0}
 .hero-img{
-  width:100%;aspect-ratio:16/9;object-fit:cover;
-  display:block;opacity:.98;
+  width:100%;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  display:block;
+  opacity:.98;
+}
+/* Mobile: proporção 9:16 para a imagem vertical */
+@media(max-width:700px){
+  .hero-img{aspect-ratio:9/16;object-position:center center}
 }
 /* faixa colorida abaixo do hero */
 .hero-bar{height:6px;background:linear-gradient(90deg,var(--amarelo) 0%,var(--rosa-light) 50%,var(--amarelo) 100%)}
-@media(max-width:600px){.hero-img{aspect-ratio:4/5;object-position:center center}}
 
 /* ─── valores ─── */
 .valores{background:var(--rosa);padding:clamp(32px,4.5vw,48px) 0}
@@ -256,21 +262,18 @@ footer .fmarca{font-family:'Parisienne',cursive;font-size:1.8rem;color:var(--ama
 
 <!-- HERO -->
 <section class="hero">
-  <img src="hero.jpg"
-       alt="Doce Encanto Confeitaria — sua dose diária de felicidade, feita à mão com amor"
-       class="hero-img">
+  <picture>
+    <!-- Mobile: imagem vertical 9:16 -->
+    <source media="(max-width: 700px)" srcset="hero-mobile.jpg">
+    <!-- Desktop: imagem horizontal 16:9 -->
+    <img src="hero-desktop.jpg"
+         alt="Doce Encanto Confeitaria — sua dose diária de felicidade, feita à mão com amor"
+         class="hero-img">
+  </picture>
 </section>
 <div class="hero-bar"></div>
 
-<!-- VALORES -->
-<div class="valores">
-  <div class="wrap">
-    <div><span class="ico">🌿</span><h4>Ingredientes selecionados</h4><p>Do campo direto para a sua mesa</p></div>
-    <div><span class="ico">🥄</span><h4>Receitas artesanais</h4><p>Do zero, sem pré-pronto</p></div>
-    <div><span class="ico">❤️</span><h4>Feito com amor</h4><p>Um a um, para a sua data</p></div>
-    <div><span class="ico">📦</span><h4>Embalagem com carinho</h4><p>Entregue fresquinho e bem cuidado</p></div>
-  </div>
-</div>
+
 
 <!-- CARDÁPIO -->
 <section id="cardapio" class="cardapio">
