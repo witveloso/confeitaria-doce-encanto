@@ -43,12 +43,7 @@ h3{font-size:1.3rem;font-weight:400;color:var(--ink)}
 .eyebrow{font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:var(--rosa);font-weight:600}
 
 /* ─── topbar ─── */
-.topbar{
-  position:sticky;top:0;z-index:60;
-  background:rgba(255,252,248,.92);backdrop-filter:blur(14px);
-  border:none;
-  box-shadow:none;
-}
+.topbar{display:none}
 .topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
 .brandname{font-family:'Cormorant Garamond',serif;font-size:1.12rem;font-weight:400;color:var(--rosa);letter-spacing:.04em}
 .brandname span{font-family:'Parisienne',cursive;font-size:.88rem;color:var(--ink-soft);display:block;line-height:1.1}
@@ -83,7 +78,7 @@ h3{font-size:1.3rem;font-weight:400;color:var(--ink)}
   .hero-img{aspect-ratio:9/16;object-position:center center}
 }
 /* faixa colorida abaixo do hero */
-.hero-bar{display:none}
+.hero-bar{height:6px;background:linear-gradient(90deg,var(--amarelo) 0%,var(--rosa-light) 50%,var(--amarelo) 100%)}
 
 /* ─── valores ─── */
 .valores{background:var(--rosa);padding:clamp(32px,4.5vw,48px) 0}
