@@ -68,14 +68,12 @@ h3{font-size:1.3rem;font-weight:400;color:var(--ink)}
 .hero{position:relative;background:var(--ink);line-height:0}
 .hero-img{
   width:100%;
-  aspect-ratio:16/9;
-  object-fit:cover;
+  height:auto;
   display:block;
   opacity:.98;
 }
-/* Mobile: proporção 9:16 para a imagem vertical */
 @media(max-width:700px){
-  .hero-img{aspect-ratio:9/16;object-position:center center}
+  .hero-img{width:100%;height:auto}
 }
 /* faixa colorida abaixo do hero */
 .hero-bar{height:6px;background:linear-gradient(90deg,var(--amarelo) 0%,var(--rosa-light) 50%,var(--amarelo) 100%)}
