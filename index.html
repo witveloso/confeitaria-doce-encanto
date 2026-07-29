@@ -65,19 +65,18 @@ h3{font-size:1.3rem;font-weight:400;color:var(--ink)}
 .btn:focus-visible{outline:3px solid var(--amarelo);outline-offset:3px}
 
 /* ─── hero ─── */
-.hero{position:relative;background:#7B4A18;line-height:0;height:100svh;height:100vh}
-.hero picture{display:block;height:100%}
+.hero{position:relative;background:#7B4A18;line-height:0}
+.hero picture{display:block}
 .hero-img{
   width:100%;
-  height:100%;
-  object-fit:contain;
+  height:100vh;
+  object-fit:cover;
   object-position:center center;
   display:block;
   opacity:.98;
 }
 @media(max-width:700px){
-  .hero{height:100svh;height:100vh}
-  .hero-img{object-fit:contain}
+  .hero-img{height:100svh;height:100vh;object-fit:contain}
 }
 /* faixa colorida abaixo do hero */
 .hero-bar{height:6px;background:linear-gradient(90deg,var(--amarelo) 0%,var(--rosa-light) 50%,var(--amarelo) 100%)}
